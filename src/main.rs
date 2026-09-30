@@ -1,5 +1,6 @@
 use std::time::Instant;
 use minifb::{Key, KeyRepeat, Window, WindowOptions};
+use minifb_fonts::{font6x8};
 
 mod window;
 mod game;
@@ -14,11 +15,13 @@ fn main() {
         window::HEIGHT,
         WindowOptions::default(),
     ).unwrap();
-    
+
     let mut game_state= game::GameState::new();
     let mut input_state = input::InputState::new(vec![Key::A, Key::S, Key::K, Key::L]);
-    
+
     let mut last_frame = Instant::now();
+
+    let text = font6x8::new_renderer(window::WIDTH, window::HEIGHT, 0xFFFFFF);
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
 
@@ -45,7 +48,6 @@ fn main() {
         game_state.ball.apply_move(delta_time);
         if game_state.ball.check_victory(&mut game_state.score) {
             game_state.reset();
-            println!("Score: {} | {}", game_state.score.0, game_state.score.1);
         }
 
         // Draw entities
@@ -54,6 +56,11 @@ fn main() {
         window::draw_rect(&mut buffer, game_state.player_2.position(), game_state.player_2.rect());
         window::draw_rect(&mut buffer, game_state.ball.position(), game_state.ball.rect());
         
+        // Draw score
+        text.draw_text(&mut buffer, (window::WIDTH as f32 * 0.25) as usize, 20, &game_state.score.0.to_string());
+        text.draw_text(&mut buffer, (window::WIDTH as f32 * 0.75) as usize, 20, &game_state.score.1.to_string());
+
+        // Update buffer
         window
             .update_with_buffer(&buffer, window::WIDTH, window::HEIGHT)
             .unwrap();
