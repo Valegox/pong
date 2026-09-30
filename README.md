@@ -9,6 +9,12 @@ A simple Pong game I made to practice in Rust
 - [``cargo``](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 - Someone to play with
 
+## How to run
+
+```
+$ cargo run
+```
+
 ## Usage (AZERTY keyboard)
 
 - Left player presses Q/S to move
